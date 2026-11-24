@@ -13,6 +13,9 @@ public enum BreakType {
     Sunbathing = 0,
     RestingInSoil = 1,
     RestingInDarkness = 2,
+    cultivateSoil = 3,
+    TransplantingToGarden= 4,
+
 }
 
 [Serializable]

@@ -2,7 +2,12 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public enum TimerPhase { Idle, Focus, Break }
+public enum TimerPhase {
+    FocusReady = 0,
+    Focus = 1,
+    BreakReady = 2,
+    Break = 3,
+}
 
 public class PomodoroTimer : MonoBehaviour
 {
@@ -14,7 +19,7 @@ public class PomodoroTimer : MonoBehaviour
     public event Action OnBreakComplete;
 
     private float remainingSeconds;
-    private TimerPhase phase = TimerPhase.Idle;
+    private TimerPhase phase = TimerPhase.FocusReady;
 
     private void Start()
     {
@@ -25,10 +30,8 @@ public class PomodoroTimer : MonoBehaviour
 
     private void Update()
     {
-        if (phase == TimerPhase.Idle)
-        {
-            return;
-        }
+
+        if (phase == TimerPhase.BreakReady || phase == TimerPhase.FocusReady) return ;
 
         remainingSeconds -= Time.deltaTime;
 
@@ -41,14 +44,13 @@ public class PomodoroTimer : MonoBehaviour
         if (phase == TimerPhase.Focus)
         {
             OnFocusComplete?.Invoke();
-            StartBreak();
+            SetPhase(TimerPhase.BreakReady);
         }
         else
         {
-            OnBreakComplete?.Invoke();
-            ResetToIdle();
+            OnBreakComplete?.Invoke(); 
+            SetPhase(TimerPhase.FocusReady);
         }
-        
         UpdateDisplay();
         UpdateButtonLabel();
     }
@@ -57,30 +59,31 @@ public class PomodoroTimer : MonoBehaviour
     {
         switch (phase)
         {
-            case TimerPhase.Idle:  StartFocus();   break;
-            default: ResetToIdle(); break;
+            case TimerPhase.FocusReady:  SetPhase(TimerPhase.Focus);   break;
+            case TimerPhase.Focus: SetPhase(TimerPhase.FocusReady); break;
+            case TimerPhase.BreakReady: SetPhase(TimerPhase.Break); break;
+            case TimerPhase.Break:
+                OnBreakComplete?.Invoke(); 
+                SetPhase(TimerPhase.FocusReady);
+                break;
+        }
+    }
+
+    public void SetPhase(TimerPhase newPhase)
+    {
+        phase = newPhase;
+
+        if (phase == TimerPhase.FocusReady || phase == TimerPhase.Focus)
+        {
+            remainingSeconds = focusMinutes * 60f;
+        }
+        else
+        {
+            remainingSeconds = breakMinutes * 60f;
         }
 
-        UpdateButtonLabel();
-    }
-
-    private void StartFocus()
-    {
-        phase = TimerPhase.Focus;
-        remainingSeconds = focusMinutes * 60f;
-    }
-
-    private void StartBreak()
-    {
-        phase = TimerPhase.Break;
-        remainingSeconds = breakMinutes * 60f;
-    }
-
-    private void ResetToIdle()
-    {
-        phase = TimerPhase.Idle;
-        remainingSeconds = focusMinutes * 60f;
         UpdateDisplay();
+        UpdateButtonLabel();
     }
 
     private void UpdateDisplay()
@@ -94,9 +97,10 @@ public class PomodoroTimer : MonoBehaviour
     {
         buttonLabel.text = phase switch
         {
-            TimerPhase.Idle  => "Start Planting",
-            TimerPhase.Focus => "Cancel",
-            _                => "Skip Break",
+            TimerPhase.FocusReady   => "Start Session",
+            TimerPhase.Focus        => "Cancel",
+            TimerPhase.BreakReady   => "Start Break",
+            _                       => "Skip Break",
         };
     }
 }
