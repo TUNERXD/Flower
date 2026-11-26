@@ -10,11 +10,11 @@ public enum StageType
 }
 
 public enum BreakType {
-    Sunbathing = 0,
+    CultivateSoil = 0,
     RestingInSoil = 1,
-    RestingInDarkness = 2,
-    CultivateSoil = 3,
-    TransplantingToGarden= 4,
+    Sunbathing = 2,
+    TransplantingToGarden= 3,
+    RestingInDarkness = 4,
 
 }
 
