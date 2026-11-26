@@ -59,9 +59,9 @@ public class PomodoroTimer : MonoBehaviour
     {
         switch (phase)
         {
-            case TimerPhase.FocusReady:  SetPhase(TimerPhase.Focus);   break;
-            case TimerPhase.Focus: SetPhase(TimerPhase.FocusReady); break;
-            case TimerPhase.BreakReady: SetPhase(TimerPhase.Break); break;
+            case TimerPhase.FocusReady:  SetPhase(TimerPhase.Focus);    break;
+            case TimerPhase.Focus: SetPhase(TimerPhase.FocusReady);     break;
+            case TimerPhase.BreakReady: SetPhase(TimerPhase.Break);     break;
             case TimerPhase.Break:
                 OnBreakComplete?.Invoke(); 
                 SetPhase(TimerPhase.FocusReady);

@@ -13,7 +13,7 @@ public enum BreakType {
     Sunbathing = 0,
     RestingInSoil = 1,
     RestingInDarkness = 2,
-    cultivateSoil = 3,
+    CultivateSoil = 3,
     TransplantingToGarden= 4,
 
 }

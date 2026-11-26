@@ -26,10 +26,23 @@ public class FlowerGrowth : MonoBehaviour
         UpdateStageText();
     }
 
+    private string GetBreakText(BreakType breakType, string flowerName)
+    {
+        return breakType switch
+        {
+            BreakType.CultivateSoil         => "Cultivating soil",
+            BreakType.Sunbathing            => $"{flowerName} is sunbathing",
+            BreakType.RestingInSoil         => $"{flowerName} is resting in the soil",
+            BreakType.RestingInDarkness     => $"{flowerName} is resting in the darkness",
+            BreakType.TransplantingToGarden => $"Transplanting {flowerName} to your garden",
+            _                               => breakType.ToString(),
+        };
+    }
+
     private void HandleFocusComplete()
     {
         StageData stage = currentFlower.stages[currentStageIndex];
-        stageText.text = stage.breakType.ToString();
+        stageText.text = GetBreakText(stage.breakType, currentFlower.flowerName);
     }
 
     private void HandleBreakComplete()
