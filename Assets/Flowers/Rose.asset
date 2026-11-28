@@ -16,13 +16,13 @@ MonoBehaviour:
   stages:
   - type: 0
     sprite: {fileID: 0}
-    breakType: 3
+    breakType: 0
   - type: 1
     sprite: {fileID: 0}
     breakType: 1
   - type: 2
     sprite: {fileID: 0}
-    breakType: 0
+    breakType: 2
   - type: 3
     sprite: {fileID: 0}
-    breakType: 4
+    breakType: 3

@@ -21,15 +21,39 @@ public class FlowerGrowth : MonoBehaviour
         timer.OnBreakComplete -= HandleBreakComplete;
     }
 
-    private void Start()
+    private void Start() 
     {
         UpdateStageText();
     }
 
+    private string GetFocusText(StageType stageType, string flowerName)
+    {
+        return stageType switch
+        {
+            StageType.SeedFetching         => $"Fetching {flowerName} seeds",
+            StageType.Seeding              => $"Planting {flowerName} seeds",
+            StageType.Watering             => $"Watering {flowerName}",
+            StageType.BeesFertilizing      => $"Bees are fertilizing the {flowerName}",
+            _                              => stageType.ToString(),
+        };
+    }
+
+    private string GetBreakText(BreakType breakType, string flowerName)
+    {
+        return breakType switch
+        {
+            BreakType.CultivateSoil         => "Cultivating soil",
+            BreakType.Sunbathing            => $"{flowerName} is sunbathing",
+            BreakType.RestingInSoil         => $"{flowerName} is resting in the soil",
+            BreakType.RestingInDarkness     => $"{flowerName} is resting in the darkness",
+            BreakType.TransplantingToGarden => $"Transplanting {flowerName} to your garden",
+            _                               => breakType.ToString(),
+        };
+    }
+
     private void HandleFocusComplete()
     {
-        StageData stage = currentFlower.stages[currentStageIndex];
-        stageText.text = stage.breakType.ToString();
+        UpdateBreakText();
     }
 
     private void HandleBreakComplete()
@@ -48,6 +72,12 @@ public class FlowerGrowth : MonoBehaviour
     private void UpdateStageText()
     {
         StageData stage = currentFlower.stages[currentStageIndex];
-        stageText.text = stage.type.ToString();
+        stageText.text = GetFocusText(stage.type, currentFlower.flowerName);
+    }
+
+    private void UpdateBreakText()
+    {
+        StageData stage = currentFlower.stages[currentStageIndex];
+        stageText.text = GetBreakText(stage.breakType, currentFlower.flowerName);
     }
 }

@@ -23,9 +23,7 @@ public class PomodoroTimer : MonoBehaviour
 
     private void Start()
     {
-        remainingSeconds = focusMinutes * 60f;
-        UpdateDisplay();
-        UpdateButtonLabel();
+        SetPhase(phase);
     }
 
     private void Update()
@@ -48,28 +46,22 @@ public class PomodoroTimer : MonoBehaviour
         }
         else
         {
-            OnBreakComplete?.Invoke(); 
-            SetPhase(TimerPhase.FocusReady);
+            EndBreak();
         }
-        UpdateDisplay();
-        UpdateButtonLabel();
     }
 
     public void OnMainButtonPressed()
     {
         switch (phase)
         {
-            case TimerPhase.FocusReady:  SetPhase(TimerPhase.Focus);   break;
-            case TimerPhase.Focus: SetPhase(TimerPhase.FocusReady); break;
-            case TimerPhase.BreakReady: SetPhase(TimerPhase.Break); break;
-            case TimerPhase.Break:
-                OnBreakComplete?.Invoke(); 
-                SetPhase(TimerPhase.FocusReady);
-                break;
+            case TimerPhase.FocusReady:  SetPhase(TimerPhase.Focus);    break;
+            case TimerPhase.Focus: SetPhase(TimerPhase.FocusReady);     break;
+            case TimerPhase.BreakReady: SetPhase(TimerPhase.Break);     break;
+            case TimerPhase.Break: EndBreak();                          break;
         }
     }
 
-    public void SetPhase(TimerPhase newPhase)
+    private void SetPhase(TimerPhase newPhase)
     {
         phase = newPhase;
 
@@ -84,6 +76,12 @@ public class PomodoroTimer : MonoBehaviour
 
         UpdateDisplay();
         UpdateButtonLabel();
+    }
+
+    private void EndBreak()
+    {
+        OnBreakComplete?.Invoke(); 
+        SetPhase(TimerPhase.FocusReady);
     }
 
     private void UpdateDisplay()
